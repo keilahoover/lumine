@@ -13,128 +13,78 @@ var config = {
       preload: preload,
       create: create,
       update: update
-      // render: render
   }
   };
 
   var game = new Phaser.Game(config);
 
   function preload () {
-      this.load.audio('atmosphere', ['./assets/audio/Blazing-Stars.mp3']);
-      this.load.image('sky', './assets/planet_scenery.jpg');
-      this.load.image('ground', './assets/platforms.png');
-      this.load.image('star', './assets/crystal.jpg');
-      this.load.image('bomb', './assets/bomb.png');
-      this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+  this.load.image('sky', './assets/planet_scenery.jpg');
+  this.load.image('platform', './assets/platform2.png');
+  this.load.image('ice-platform', './assets/ice-platform.png');
+  this.load.image('ground', './assets/ground.jpg');
+  this.load.image('star', './assets/star.png');
+  this.load.image('bomb', './assets/bomb.png');
+  this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 48 });
   }
 
   var platforms;
   var player;
   var score = 0;
   var scoreText;
-  // var music;
 
 
   function create () {
-
-    var pixelWidth = 6;
-    var pixelHeight = 6;
-
-    //Background Music
-
-    this.add.image(400, 600, 'sky');
-
-    //Platforms
+    //background
+    this.add.image(400, 300, 'sky');
+    //platforms
     platforms = this.physics.add.staticGroup();
-
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-
-    platforms.create(650, 400, 'ground');
-    platforms.create(150, 480, 'ground');
-    platforms.create(750, 300, 'ground');
-
-    //Player
-    player = this.physics.add.sprite(100, 450, 'dude');
-    // game.add.sprite(150, 200, 'alien').anchor.y = 1;
-
-
+    platforms.create(400, 750, 'ground').setScale(1).refreshBody();
+    platforms.create(650, 370, 'platform');
+    platforms.create(115, 330, 'platform');
+    platforms.create(700, 200, 'ice-platform');
+    //player
+    player = this.physics.add.sprite(100, 400, 'dude');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
     player.body.setGravityY(300)
-
-    //Player Movement
+    //create movement
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
         frameRate: 10,
         repeat: -1
     });
-
     this.anims.create({
         key: 'turn',
         frames: [ { key: 'dude', frame: 4 } ],
         frameRate: 20
     });
-
     this.anims.create({
         key: 'right',
         frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
         frameRate: 10,
         repeat: -1
     });
-
-
     cursors = this.input.keyboard.createCursorKeys();
-
-    //Crystals
+    //create collected item (star soon to be crystal)
     stars = this.physics.add.group({
     key: 'star',
     repeat: 11,
     setXY: { x: 12, y: 0, stepX: 70 }
     });
-
     stars.children.iterate(function (child) {
       child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
-
-    // this.audio.add('atmosphere').play();
-
-    // music.play();
-
+    //score
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
+    //enemy (bombs)
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
-
     this.physics.add.overlap(player, stars, collectStar, null, this);
-
     bombs = this.physics.add.group();
-
     this.physics.add.collider(bombs, platforms);
-
     this.physics.add.collider(player, bombs, hitBomb, null, this);
-
-//Alien Trial
-  //   var alien = [
-  //   '....44........',
-  //   '....44........',
-  //   '......5.......',
-  //   '......5.......',
-  //   '....ABBBBA....',
-  //   '...ABBBBBBA...',
-  //   '..ABB8228BBA..',
-  //   '..BB882288BB..',
-  //   '.ABB885588BBA.',
-  //   'BBBB885588BBBB',
-  //   'BBBB788887BBBB',
-  //   '.ABBB7777BBBA.',
-  //   '.ABBBBBBBBBBA.',
-  //   '.AABBBBBBBBAA.',
-  //   '.AAAAAAAAAAAA.',
-  //   '.5AAAAAAAAAA5.'
-  // ];
-  //
-  // game.create.texture('alien', alien, pixelWidth, pixelHeight);
   }
 
   function update () {
@@ -153,10 +103,6 @@ var config = {
     }
   }
 
-//   function render() {
-//     game.debug.soundInfo(music, 20, 32);
-// }
-
   function collectStar (player, star) {
     star.disableBody(true, true);
     score += 10;
@@ -172,7 +118,7 @@ var config = {
     bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
     bomb.allowGravity = false;
     }
-  }
+}
 
   function hitBomb (player, bomb) {
     this.physics.pause();
