@@ -1,7 +1,7 @@
 var config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: 1430,
+  height: 768,
   physics: {
       default: 'arcade',
       arcade: {
@@ -17,21 +17,29 @@ var config = {
   };
 
   var game = new Phaser.Game(config);
+  function Main () {},
+  gameOptions = {
+    playSound: true,
+    playMusic: true
+  },
+  musicPlayer;
 
   function preload () {
-  this.load.image('sky', './assets/planet_scenery.jpg');
+  this.load.image('sky', './assets/planet_scenery2.jpg');
   this.load.image('platform', './assets/platform2.png');
   this.load.image('ice-platform', './assets/ice-platform.png');
   this.load.image('ground', './assets/ground.jpg');
   this.load.image('star', './assets/star.png');
   this.load.image('bomb', './assets/bomb.png');
-  this.load.spritesheet('dude', './assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+  this.load.spritesheet('dude', './assets/Keilas_Sprite_Sheet_2.png', { frameWidth: 69, frameHeight: 90 });
   }
 
   var platforms;
   var player;
   var score = 0;
+  var highscore = 0;
   var scoreText;
+  var highScoreText;
 
 
   function create () {
@@ -44,7 +52,7 @@ var config = {
     platforms.create(115, 330, 'platform');
     platforms.create(700, 200, 'ice-platform');
     //player
-    player = this.physics.add.sprite(100, 400, 'dude');
+    player = this.physics.add.sprite(100, 390, 'dude');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
     player.body.setGravityY(300)
@@ -52,7 +60,7 @@ var config = {
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-        frameRate: 10,
+        frameRate: 8,
         repeat: -1
     });
     this.anims.create({
@@ -77,7 +85,15 @@ var config = {
       child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
     //score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    //add score to local storage for high score
+    if (score < localStorage.getItem("highscore")) {
+      // debugger
+      // scoreText = score.add.text(16, 16, 'score: 0', {fontFamily fontSize: '32px', fill: '#000' });
+      // localStorage.setItem("highscore", score);
+      highScoreText = this.add.text(16, 16,
+      { fontSize: '32px', fill: '#00'})
+
+    }
     //enemy (bombs)
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
@@ -111,8 +127,8 @@ var config = {
       stars.children.iterate(function (child) {
         child.enableBody(true, child.x, 0, true, true);
       });
-    var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-    var bomb = bombs.create(x, 16, 'bomb');
+    var x = (player.x < 400) ? Phaser.Math.Between(390, 800) : Phaser.Math.Between(0, 390);
+    var bomb = bombs.create(x, 12, 'bomb');
     bomb.setBounce(1);
     bomb.setCollideWorldBounds(true);
     bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
