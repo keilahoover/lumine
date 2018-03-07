@@ -34,7 +34,9 @@ var config = {
   this.load.image('star', './assets/images/star.png');
   this.load.image('bomb', './assets/images/bomb.png');
   this.load.spritesheet('dude', './assets/images/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
+  this.load.audio('alien', ['./assets/audio/Alien_Restaurant.mp3'])
   }
+
 
   var platforms;
   var player;
@@ -46,6 +48,9 @@ var config = {
   var title;
 
   function create () {
+    //Load Music
+    var music = this.sound.add('alien');
+    music.play();
     //background
     this.add.image(450, 300, 'sky');
     //platforms
@@ -87,11 +92,10 @@ var config = {
     setXY: { x: 12, y: 0, stepX: 70 }
     });
     stars.children.iterate(function (child) {
-      child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+      child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.5));
     });
     //Score and Highscore
     scoreText = this.add.text(20, 60, 'SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
-    // scoreDisplay = this.add.text(40, 40, score, {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     if (getHighScore(highScore) === '0') {
       highScoreText = this.add.text(20, 20, 'HIGH SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     } else {
