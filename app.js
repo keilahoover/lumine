@@ -12,7 +12,8 @@ var config = {
   scene: {
       preload: preload,
       create: create,
-      update: update
+      update: update,
+      render: render
   }
   };
   var game = new Phaser.Game(config);
@@ -53,7 +54,7 @@ var config = {
     platforms.create(1200, 450, 'platform');
     platforms.create(800, 500, 'platform');
     platforms.create(115, 330, 'platform');
-    platforms.create(700, 200, 'ice-platform');
+    platforms.create(700, 300, 'ice-platform');
 
     //player
     player = this.physics.add.sprite(100, 390, 'dude');
@@ -82,7 +83,7 @@ var config = {
     //create collected item (star soon to be crystal)
     stars = this.physics.add.group({
     key: 'star',
-    repeat: 21,
+    repeat: 11,
     setXY: { x: 12, y: 0, stepX: 70 }
     });
     stars.children.iterate(function (child) {
@@ -90,7 +91,7 @@ var config = {
     });
     //Score and Highscore
     scoreText = this.add.text(20, 60, 'SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
-    scoreDisplay = this.add.text(40, 40, score, {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
+    // scoreDisplay = this.add.text(40, 40, score, {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     highScoreText = this.add.text(20, 20, 'HIGH SCORE:' + highScore, {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
 
     //Title
@@ -150,5 +151,9 @@ var config = {
   }
 //Add score to local storage for highscore
 function highScoreAppend () {
-    this.localStorage.setItem('score', JSON.stringify('score'));
+    this.localStorage.setItem('score', JSON.stringify(score));
+}
+
+function render () {
+  
 }
