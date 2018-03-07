@@ -13,7 +13,7 @@ var config = {
       preload: preload,
       create: create,
       update: update,
-      render: render
+      // render: render
   }
   };
   var game = new Phaser.Game(config);
@@ -27,13 +27,13 @@ var config = {
   // musicPlayer;
 
   function preload () {
-  this.load.image('sky', './assets/planet_scenery2.jpg');
-  this.load.image('platform', './assets/platform2.png');
-  this.load.image('ice-platform', './assets/ice-platform.png');
-  this.load.image('ground', './assets/ground.jpg');
-  this.load.image('star', './assets/star.png');
-  this.load.image('bomb', './assets/bomb.png');
-  this.load.spritesheet('dude', './assets/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
+  this.load.image('sky', './assets/images/planet_scenery2.jpg');
+  this.load.image('platform', './assets/images/platform2.png');
+  this.load.image('ice-platform', './assets/images/ice-platform.png');
+  this.load.image('ground', './assets/images/ground.jpg');
+  this.load.image('star', './assets/images/star.png');
+  this.load.image('bomb', './assets/images/bomb.png');
+  this.load.spritesheet('dude', './assets/images/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
   }
 
   var platforms;
@@ -41,8 +41,8 @@ var config = {
   var score = 0;
   var scoreText;
   var scoreDisplay;
-  var highScore = 0;
-  var highScoreText;
+  var highScore;
+  var highScoreText = getHighScore();
   var title;
 
   function create () {
@@ -92,7 +92,12 @@ var config = {
     //Score and Highscore
     scoreText = this.add.text(20, 60, 'SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     // scoreDisplay = this.add.text(40, 40, score, {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
-    highScoreText = this.add.text(20, 20, 'HIGH SCORE:' + highScore, {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
+    if (getHighScore(highScore) === '0') {
+      highScoreText = this.add.text(20, 20, 'HIGH SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
+    } else {
+        highScoreText = this.add.text(20, 20, 'HIGHSCORE:' + getHighScore(highScore), {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
+    }
+
 
     //Title
     title = this.add.text(1230, 20, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '90px', fill: '#FFFFFF'});
@@ -120,16 +125,16 @@ var config = {
     if (cursors.up.isDown && player.body.touching.down) {
     player.setVelocityY(-430);
     }
-    highScoreText.text = 'HIGH SCORE: ' + JSON.parse(localStorage.getItem('userHighScore'));
-    if (score > localStorage.getItem('userHighScore')) {
-      localStorage.setItem('userHighScore', score);
-    }
   }
 
   function collectStar (player, star) {
     star.disableBody(true, true);
     score += 10;
-    scoreText.setText('Score: ' + score);
+    scoreText.setText('SCORE: ' + score);
+    if (score > getHighScore()) {
+      setHighScore(score);
+      highScoreText.setText('HIGHSCORE:' + getHighScore(highScore));
+    }
     if (stars.countActive(true) === 0) {
       stars.children.iterate(function (child) {
         child.enableBody(true, child.x, 0, true, true);
@@ -150,10 +155,10 @@ var config = {
     gameOver = true;
   }
 //Add score to local storage for highscore
-function highScoreAppend () {
-    this.localStorage.setItem('score', JSON.stringify(score));
+function setHighScore (score = 0) {
+    localStorage.setItem('score', JSON.stringify(score));
 }
 
-function render () {
-  
+function getHighScore (highScore = 0) {
+  return JSON.parse(localStorage.getItem('score') || '0');
 }
