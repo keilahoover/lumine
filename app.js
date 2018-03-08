@@ -27,10 +27,10 @@ var config = {
   this.load.image('platform-sm', './assets/images/Platform_Small.png');
   this.load.image('ground', './assets/images/Ground.png');
   // this.load.image('ice-platform', './assets/images/ice-platform.png');
-  this.load.image('star', './assets/images/star.png');
-  this.load.image('bomb', './assets/images/bomb.png');
-  this.load.spritesheet('dude', './assets/images/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
-  this.load.audio('alien', ['./assets/audio/Airship_Serenity.mp3'])
+  this.load.image('crystal', './assets/images/star.png');
+  this.load.image('enemy', './assets/images/bomb.png');
+  this.load.spritesheet('alien', './assets/images/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
+  this.load.audio('airship', ['./assets/audio/Airship_Serenity.mp3'])
   }
 
   var platforms;
@@ -41,10 +41,11 @@ var config = {
   var highScore;
   var highScoreText = getHighScore();
   var title;
+  var gameOver;
 
   function create () {
     //Load Music
-    var music = this.sound.add('alien');
+    var music = this.sound.add('airship');
     music.play();
     //background
     this.add.image(700, 300, 'sky');
@@ -61,36 +62,37 @@ var config = {
     platforms.create(500, 330, 'platform-md');
 
     //player
-    player = this.physics.add.sprite(100, 390, 'dude');
+    player = this.physics.add.sprite(100, 390, 'alien').setInteractive();
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
     player.body.setGravityY(300)
     //create movement
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frames: this.anims.generateFrameNumbers('alien', { start: 0, end: 3 }),
         frameRate: 8,
         repeat: -1
     });
     this.anims.create({
         key: 'turn',
-        frames: [ { key: 'dude', frame: 4 } ],
+        frames: [ { key: 'alien', frame: 4 } ],
         frameRate: 20
     });
     this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 9 }),
+        frames: this.anims.generateFrameNumbers('alien', { start: 5, end: 9 }),
         frameRate: 10,
         repeat: -1
     });
     cursors = this.input.keyboard.createCursorKeys();
+    restartKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     //create collected item (star soon to be crystal)
-    stars = this.physics.add.group({
-    key: 'star',
+    crystals = this.physics.add.group({
+    key: 'crystal',
     repeat: 19,
     setXY: { x: 12, y: 0, stepX: 70 }
     });
-    stars.children.iterate(function (child) {
+    crystals.children.iterate(function (child) {
       child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.5));
     });
     //Score and Highscore
@@ -101,14 +103,17 @@ var config = {
         highScoreText = this.add.text(20, 20, 'HIGHSCORE:' + getHighScore(highScore), {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     }
     //Title
-    title = this.add.text(1230, 20, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '90px', fill: '#FFFFFF'});
+    title = this.add.text(1230,15, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '90px', fill: '#FFFFFF'});
+    //Restart Btn text
+    restartText = this.add.text(1150, 90, 'PRESS R TO RESTART', {fontFamily: 'Alien Beasts', fontSize: '60px', fill: '#FFFFFF'});
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(stars, platforms);
-    this.physics.add.overlap(player, stars, collectCrystal, null, this);
-    bombs = this.physics.add.group();
-    this.physics.add.collider(bombs, platforms);
-    this.physics.add.collider(player, bombs, enemyCollide, null, this);
-  }
+    this.physics.add.collider(crystals, platforms);
+    this.physics.add.overlap(player, crystals, collectCrystal, null, this);
+    enemies = this.physics.add.group();
+    this.physics.add.collider(enemies, platforms);
+    this.physics.add.collider(player, enemies, enemyCollide, null, this);
+    }
+
 
   function update () {
     if (cursors.left.isDown) {
@@ -124,36 +129,43 @@ var config = {
     if (cursors.up.isDown && player.body.touching.down) {
     player.setVelocityY(-430);
     }
+    if (restartKey.isDown) {
+      console.log('hello');
+      restartGame();
+    }
+    player.on('pointerover', function(pointer, x, y) {
+      this.setTint(0xff0000);
+    });
+    player.on('pointerout', function(pointer) {
+      this.clearTint();
+    });
   }
 
-  function collectCrystal (player, star) {
-    star.disableBody(true, true);
+  function collectCrystal (player, crystal) {
+    crystal.disableBody(true, true);
     score += 10;
     scoreText.setText('SCORE: ' + score);
     if (score > getHighScore()) {
       setHighScore(score);
       highScoreText.setText('HIGHSCORE:' + getHighScore(highScore));
     }
-    if (stars.countActive(true) === 0) {
-      stars.children.iterate(function (child) {
+    if (crystals.countActive(true) === 0) {
+    crystals.children.iterate(function (child) {
         child.enableBody(true, child.x, 0, true, true);
       });
     var x = (player.x < 400) ? Phaser.Math.Between(390, 800) : Phaser.Math.Between(0, 390);
-    var bomb = bombs.create(x, 12, 'bomb');
-    bomb.setBounce(1);
-    bomb.setCollideWorldBounds(true);
-    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-    bomb.allowGravity = false;
+    var enemy = enemies.create(x, 12, 'enemy');
+    enemy.setBounce(1);
+    enemy.setCollideWorldBounds(true);
+    enemy.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    enemy.allowGravity = false;
     }
 }
 
-  function enemyCollide (player, bomb) {
-    this.physics.pause();
-    player.setTint(0xff0000);
-    player.anims.play('turn');
+  function enemyCollide (player) {
+    player.kill();
     gameOver = true;
   }
-//Add score to local storage for highscore
 function setHighScore (score = 0) {
     localStorage.setItem('score', JSON.stringify(score));
 }
@@ -162,6 +174,7 @@ function getHighScore (highScore = 0) {
   return JSON.parse(localStorage.getItem('score') || '0');
 }
 
-// function restart () {
-//   this.state.start('main')
-// }
+function restartGame(main) {
+  console.log(player.revive());
+  player.revive();
+}
