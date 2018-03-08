@@ -27,8 +27,22 @@ describe('Game', function () {
     });
   });
   describe('Set Highscore', function () {
+    //default to zero
+    //replace with new Highscore
     it('is a function', function () {
       expect(setHighScore).to.be.a('function');
+    });
+    it('score defaults to zero', function () {
+      setHighScore(0)
+      expect(getHighScore()).to.eq(0);
+    });
+    it('expect highscore to equal 100', function () {
+      setHighScore(100);
+      expect(getHighScore()).to.eq(100);
+    });
+    it('replace with new highscore', function () {
+      setHighScore(200);
+      expect(getHighScore()).to.eq(200);
     });
   });
   describe('Get Highscore', function () {
