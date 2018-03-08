@@ -3,38 +3,34 @@ var config = {
   width: 1400,
   height: 650,
   physics: {
-      default: 'arcade',
-      arcade: {
-          gravity: { y: 300 },
-          debug: false
-      }
-  },
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 300 },
+      debug: false
+  }
+},
   scene: {
-      preload: preload,
-      create: create,
-      update: update,
-      // render: render
+  preload: preload,
+  create: create,
+  update: update,
   }
   };
   var game = new Phaser.Game(config);
   console.log(game);
 
-  function Main () {}
-  // gameOptions = {
-  //   playSound: true,
-  //   playMusic: true
-  // },
-  // musicPlayer;
+  function Main () {};
 
   function preload () {
-  this.load.image('sky', './assets/images/planet_scenery2.jpg');
-  this.load.image('platform', './assets/images/platform2.png');
-  this.load.image('ice-platform', './assets/images/ice-platform.png');
-  this.load.image('ground', './assets/images/ground.jpg');
+  this.load.image('sky', './assets/images/Game_Background.png');
+  this.load.image('platform', './assets/images/Platform_Large.png');
+  this.load.image('platform-md', './assets/images/Platform_Medium.png');
+  this.load.image('platform-sm', './assets/images/Platform_Small.png');
+  this.load.image('ground', './assets/images/Ground.png');
+  // this.load.image('ice-platform', './assets/images/ice-platform.png');
   this.load.image('star', './assets/images/star.png');
   this.load.image('bomb', './assets/images/bomb.png');
   this.load.spritesheet('dude', './assets/images/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
-  this.load.audio('alien', ['./assets/audio/Alien_Restaurant.mp3'])
+  this.load.audio('alien', ['./assets/audio/Airship_Serenity.mp3'])
   }
 
 
@@ -52,14 +48,18 @@ var config = {
     var music = this.sound.add('alien');
     music.play();
     //background
-    this.add.image(450, 300, 'sky');
+    this.add.image(700, 300, 'sky');
     //platforms
     platforms = this.physics.add.staticGroup();
     platforms.create(700, 1500, 'ground').setScale(3).refreshBody();
-    platforms.create(1200, 450, 'platform');
-    platforms.create(800, 500, 'platform');
-    platforms.create(115, 330, 'platform');
-    platforms.create(700, 300, 'ice-platform');
+    // platforms.create(1200, 450, 'platform');
+    platforms.create(850, 450, 'platform');
+    platforms.create(1250, 200, 'platform-sm');
+    platforms.create(1050, 200, 'platform-sm');
+    platforms.create(850, 250, 'platform-md');
+    platforms.create(1300, 450, 'platform-md');
+    platforms.create(100, 330, 'platform');
+    platforms.create(500, 330, 'platform-md');
 
     //player
     player = this.physics.add.sprite(100, 390, 'dude');
@@ -88,7 +88,7 @@ var config = {
     //create collected item (star soon to be crystal)
     stars = this.physics.add.group({
     key: 'star',
-    repeat: 11,
+    repeat: 19,
     setXY: { x: 12, y: 0, stepX: 70 }
     });
     stars.children.iterate(function (child) {
@@ -146,7 +146,7 @@ var config = {
     var x = (player.x < 400) ? Phaser.Math.Between(390, 800) : Phaser.Math.Between(0, 390);
     var bomb = bombs.create(x, 12, 'bomb');
     bomb.setBounce(1);
-    // bomb.setCollideWorldBounds(true);
+    bomb.setCollideWorldBounds(true);
     bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
     bomb.allowGravity = false;
     }
