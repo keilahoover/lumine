@@ -10,9 +10,6 @@ describe('Game', function () {
     it('is a function', function () {
       expect(create).to.be.a('function');
     });
-    it('highScoreText is assigned to getHighScore callback', function () {
-      expect(getHighScore()).to.eql(highScoreText);
-    });
   });
   describe('Update Game', function () {
     it('is a function', function () {

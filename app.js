@@ -50,7 +50,7 @@ var config = {
     this.add.image(700, 300, 'sky');
     //platforms
     platforms = this.physics.add.staticGroup();
-    platforms.create(700, 1500, 'ground').setScale(3).refreshBody();
+    platforms.create(700, 600, 'ground');
     // platforms.create(1200, 450, 'platform');
     platforms.create(850, 450, 'platform');
     platforms.create(1250, 200, 'platform-sm');
@@ -100,12 +100,8 @@ var config = {
     } else {
         highScoreText = this.add.text(20, 20, 'HIGHSCORE:' + getHighScore(highScore), {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     }
-
-
     //Title
     title = this.add.text(1230, 20, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '90px', fill: '#FFFFFF'});
-
-
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.overlap(player, stars, collectCrystal, null, this);
@@ -165,3 +161,7 @@ function setHighScore (score = 0) {
 function getHighScore (highScore = 0) {
   return JSON.parse(localStorage.getItem('score') || '0');
 }
+
+// function restart () {
+//   this.state.start('main')
+// }
