@@ -27,8 +27,6 @@ describe('Game', function () {
     });
   });
   describe('Set Highscore', function () {
-    //default to zero
-    //replace with new Highscore
     it('is a function', function () {
       expect(setHighScore).to.be.a('function');
     });
