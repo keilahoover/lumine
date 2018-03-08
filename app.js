@@ -33,7 +33,6 @@ var config = {
   this.load.audio('alien', ['./assets/audio/Airship_Serenity.mp3'])
   }
 
-
   var platforms;
   var player;
   var score = 0;
@@ -109,10 +108,10 @@ var config = {
 
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
-    this.physics.add.overlap(player, stars, collectStar, null, this);
+    this.physics.add.overlap(player, stars, collectCrystal, null, this);
     bombs = this.physics.add.group();
     this.physics.add.collider(bombs, platforms);
-    this.physics.add.collider(player, bombs, hitBomb, null, this);
+    this.physics.add.collider(player, bombs, enemyCollide, null, this);
   }
 
   function update () {
@@ -131,7 +130,7 @@ var config = {
     }
   }
 
-  function collectStar (player, star) {
+  function collectCrystal (player, star) {
     star.disableBody(true, true);
     score += 10;
     scoreText.setText('SCORE: ' + score);
@@ -152,7 +151,7 @@ var config = {
     }
 }
 
-  function hitBomb (player, bomb) {
+  function enemyCollide (player, bomb) {
     this.physics.pause();
     player.setTint(0xff0000);
     player.anims.play('turn');
