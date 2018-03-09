@@ -30,7 +30,7 @@ var config = {
   this.load.image('crystal', './assets/images/star.png');
   this.load.image('enemy', './assets/images/bomb.png');
   this.load.spritesheet('alien', './assets/images/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
-  this.load.audio('airship', ['./assets/audio/Airship_Serenity.mp3'])
+  this.load.audio('airship', ['./assets/audio/pumpkinSoup.mp3'])
   }
 
   var platforms;
@@ -45,14 +45,13 @@ var config = {
 
   function create () {
     //Load Music
-    var music = this.sound.add('airship');
+    music = this.sound.add('airship');
     music.play();
     //background
     this.add.image(700, 300, 'sky');
     //platforms
     platforms = this.physics.add.staticGroup();
     platforms.create(700, 600, 'ground');
-    // platforms.create(1200, 450, 'platform');
     platforms.create(850, 450, 'platform');
     platforms.create(1250, 200, 'platform-sm');
     platforms.create(1050, 200, 'platform-sm');
@@ -85,7 +84,8 @@ var config = {
         repeat: -1
     });
     cursors = this.input.keyboard.createCursorKeys();
-    restartKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+    muteKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+    playKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P)
     //create collected item (star soon to be crystal)
     crystals = this.physics.add.group({
     key: 'crystal',
@@ -96,16 +96,15 @@ var config = {
       child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.5));
     });
     //Score and Highscore
-    scoreText = this.add.text(20, 60, 'SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
+    scoreText = this.add.text(20, 60, 'SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#440054'});
     if (getHighScore(highScore) === '0') {
-      highScoreText = this.add.text(20, 20, 'HIGH SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
+      highScoreText = this.add.text(20, 20, 'HIGH SCORE: 0', {fontFamily: 'SigmarOne-Regular', fontSize: '50px', fill: '#440054'});
     } else {
-        highScoreText = this.add.text(20, 20, 'HIGHSCORE:' + getHighScore(highScore), {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
+        highScoreText = this.add.text(20, 20, 'HIGHSCORE:' + getHighScore(highScore), {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#440054'});
     }
-    //Title
-    title = this.add.text(1230,15, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '90px', fill: '#FFFFFF'});
-    //Restart Btn text
-    restartText = this.add.text(1150, 90, 'PRESS R TO RESTART', {fontFamily: 'Alien Beasts', fontSize: '60px', fill: '#FFFFFF'});
+    title = this.add.text(1230,15, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '110px', fill: '#440054'});
+    musicMuteText = this.add.text(1200,120, 'Press M: mutes music', {fontFamily: 'Alien Beasts', fontSize: '44px', fill: '#440054'});
+    musicPlayText = this.add.text(1200,150, 'Press P: play music', {fontFamily: 'Alien Beasts', fontSize: '44px', fill: '#440054'});
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(crystals, platforms);
     this.physics.add.overlap(player, crystals, collectCrystal, null, this);
@@ -129,17 +128,19 @@ var config = {
     if (cursors.up.isDown && player.body.touching.down) {
     player.setVelocityY(-430);
     }
-    if (restartKey.isDown) {
-      console.log('hello');
-      restartGame();
-    }
     player.on('pointerover', function(pointer, x, y) {
-      this.setTint(0xff0000);
+      this.setTint(0xFF7500);
     });
     player.on('pointerout', function(pointer) {
       this.clearTint();
     });
+    if (muteKey._justDown) {
+      music.pause();
+    }
+    if (playKey._justDown) {
+      music.resume();
   }
+}
 
   function collectCrystal (player, crystal) {
     crystal.disableBody(true, true);
@@ -162,9 +163,9 @@ var config = {
     }
 }
 
-  function enemyCollide (player) {
-    player.kill();
-    gameOver = true;
+function enemyCollide (player, enemy) {
+  this.physics.pause();
+  player.setTint(0xff0000);
   }
 function setHighScore (score = 0) {
     localStorage.setItem('score', JSON.stringify(score));
@@ -172,9 +173,4 @@ function setHighScore (score = 0) {
 
 function getHighScore (highScore = 0) {
   return JSON.parse(localStorage.getItem('score') || '0');
-}
-
-function restartGame(main) {
-  console.log(player.revive());
-  player.revive();
 }

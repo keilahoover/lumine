@@ -1,3 +1,9 @@
 body {
   background-color: #009D81;
+  position: relative;
+  font-family: 'Nova Mono', sans-serif;
+}
+
+main {
+  position: absolute;
 }
