@@ -169,7 +169,8 @@ var config = {
  }
  function enemyCollide(player) {
    this.physics.pause();
-   player.setTint(0x005c04)
+   player.setTint(0x005c04);
+   music.pause();
  }
  function setHighScore(score = 0) {
    localStorage.setItem('score', JSON.stringify(score));
