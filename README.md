@@ -20,6 +20,16 @@ On an unknown planet, Lumine the Alien has taken on the mission to collect as ma
 
 *Designed Digital Assets*
 
+![alien_sprite](https://user-images.githubusercontent.com/16125778/37189250-8d2d77ce-2310-11e8-9fcc-4b5c4c51d926.png)
+
+![crystal](https://user-images.githubusercontent.com/16125778/37189258-958b0a6c-2310-11e8-8dfd-1985b2816287.png)
+
+![asteroid](https://user-images.githubusercontent.com/16125778/37189242-8487096e-2310-11e8-8d0d-5305257dd41f.png)
+
+![game_background](https://user-images.githubusercontent.com/16125778/37189264-9b30ab52-2310-11e8-9c8e-889dfa1f995c.png)
+
+![platform_large](https://user-images.githubusercontent.com/16125778/37189266-9e3eeef8-2310-11e8-8c1a-4ca341689a20.png)
+
 
 ### Credit
 ##### Keila Hoover: Game Development
