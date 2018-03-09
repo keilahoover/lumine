@@ -41,13 +41,14 @@ var scoreDisplay;
 var highScore;
 var highScoreText = getHighScore();
 var title;
-var gameOver;
 
 function create() {
   music = this.sound.add('enigmatic');
   music.play();
   this.add.image(700, 300, 'sky');
+  enemies = this.physics.add.group();
   platforms = this.physics.add.staticGroup();
+  player = this.physics.add.sprite(100, 390, 'alien');
   platforms.create(700, 580, 'ground').setScale(1.2);
   platforms.create(850, 450, 'platform');
   platforms.create(1250, 200, 'platform-sm');
@@ -56,7 +57,6 @@ function create() {
   platforms.create(1300, 450, 'platform-md');
   platforms.create(150, 330, 'platform');
   platforms.create(500, 330, 'platform-md');
-  player = this.physics.add.sprite(100, 390, 'alien');
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
   player.body.setGravityY(300)
@@ -86,9 +86,6 @@ function create() {
     frameRate: 10,
     repeat: -1
   });
-  cursors = this.input.keyboard.createCursorKeys();
-  muteKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
-  playKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P)
   crystals = this.physics.add.group({
     key: 'crystal',
     repeat: 19,
@@ -101,6 +98,14 @@ function create() {
   crystals.children.iterate(function(child) {
     child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.5));
   });
+  this.physics.add.collider(player, platforms);
+  this.physics.add.collider(crystals, platforms);
+  this.physics.add.overlap(player, crystals, collectCrystal, null, this);
+  this.physics.add.collider(enemies, platforms);
+  this.physics.add.collider(player, enemies, enemyCollide, null, this);
+  cursors = this.input.keyboard.createCursorKeys();
+  muteKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+  playKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P)
   scoreText = this.add.text(20, 60, 'SCORE: 0', {
     fontFamily: 'Alien Beasts',
     fontSize: '50px',
@@ -119,12 +124,6 @@ function create() {
       fill: '#FFFFFF'
     });
   }
-  this.physics.add.collider(player, platforms);
-  this.physics.add.collider(crystals, platforms);
-  this.physics.add.overlap(player, crystals, collectCrystal, null, this);
-  enemies = this.physics.add.group();
-  this.physics.add.collider(enemies, platforms);
-  this.physics.add.collider(player, enemies, enemyCollide, null, this);
 }
 function update() {
   if (cursors.left.isDown) {
