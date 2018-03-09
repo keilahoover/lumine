@@ -27,8 +27,8 @@ var config = {
   this.load.image('platform-sm', './assets/images/Platform_Small.png');
   this.load.image('ground', './assets/images/Ground.png');
   // this.load.image('ice-platform', './assets/images/ice-platform.png');
-  this.load.image('crystal', './assets/images/star.png');
-  this.load.image('enemy', './assets/images/bomb.png');
+  this.load.image('crystal', './assets/images/Crystal.png');
+  this.load.image('enemy', './assets/images/Asteroid.png');
   this.load.spritesheet('alien', './assets/images/Keilas_Sprite_Sheet_2.png', { frameWidth: 70.555, frameHeight: 90 });
   this.load.audio('airship', ['./assets/audio/pumpkinSoup.mp3'])
   }
@@ -51,7 +51,7 @@ var config = {
     this.add.image(700, 300, 'sky');
     //platforms
     platforms = this.physics.add.staticGroup();
-    platforms.create(700, 600, 'ground');
+    platforms.create(700, 580, 'ground').setScale(1.2);
     platforms.create(850, 450, 'platform');
     platforms.create(1250, 200, 'platform-sm');
     platforms.create(1050, 200, 'platform-sm');
@@ -96,15 +96,15 @@ var config = {
       child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.5));
     });
     //Score and Highscore
-    scoreText = this.add.text(20, 60, 'SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#440054'});
+    scoreText = this.add.text(20, 60, 'SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     if (getHighScore(highScore) === '0') {
-      highScoreText = this.add.text(20, 20, 'HIGH SCORE: 0', {fontFamily: 'SigmarOne-Regular', fontSize: '50px', fill: '#440054'});
+      highScoreText = this.add.text(20, 20, 'HIGH SCORE: 0', {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     } else {
-        highScoreText = this.add.text(20, 20, 'HIGHSCORE:' + getHighScore(highScore), {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#440054'});
+        highScoreText = this.add.text(20, 20, 'HIGHSCORE:' + getHighScore(highScore), {fontFamily: 'Alien Beasts', fontSize: '50px', fill: '#FFFFFF'});
     }
-    title = this.add.text(1230,15, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '110px', fill: '#440054'});
-    musicMuteText = this.add.text(1200,120, 'Press M: mutes music', {fontFamily: 'Alien Beasts', fontSize: '44px', fill: '#440054'});
-    musicPlayText = this.add.text(1200,150, 'Press P: play music', {fontFamily: 'Alien Beasts', fontSize: '44px', fill: '#440054'});
+    // title = this.add.text(1230, 0, 'LUMINE', {fontFamily: 'Alien Beasts', fontSize: '110px', fill: '#440054'});
+    // musicMuteText = this.add.text(1200, 90, 'Press M: mutes music', {fontFamily: 'Alien Beasts', fontSize: '44px', fill: '#440054'});
+    // musicPlayText = this.add.text(1200, 120, 'Press P: play music', {fontFamily: 'Alien Beasts', fontSize: '44px', fill: '#440054'});
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(crystals, platforms);
     this.physics.add.overlap(player, crystals, collectCrystal, null, this);
