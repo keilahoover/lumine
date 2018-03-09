@@ -32,5 +32,5 @@ On an unknown planet, Lumine the Alien has taken on the mission to collect as ma
 
 
 ### Credit
-##### Keila Hoover: Game Development
-##### Tyler Davis: Game Design
+##### Keila Hoover: Game Development & Design
+##### Tyler Davis: Digital Artist
