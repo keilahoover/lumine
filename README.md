@@ -1,6 +1,6 @@
 ## LUMINE
 
-On an unknown planet, Lumine the Alien has taken on the mission to collect as many crystals before his world is taken over my asteroid. Help him collect all the crystals!
+On an unknown planet, Lumine the Alien has taken on the mission to collect as many crystals before his world is taken over by asteroids. Help him collect all the crystals!
 
 ### HOW TO PLAY
 ##### CONTROLS
